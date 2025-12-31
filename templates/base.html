@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Excel Form Creator</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  </head>
+  <body>
+    <main class="container">
+      <header>
+        <h1>Excel Form Creator</h1>
+        <p>Upload an Excel template, fill it out in the browser, and download the completed file.</p>
+      </header>
+
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <div>
+            {% for message in messages %}
+              <mark>{{ message }}</mark>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      {% block content %}{% endblock %}
+    </main>
+  </body>
+</html>
