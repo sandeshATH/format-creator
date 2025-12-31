@@ -4,35 +4,23 @@ A simple Flask app that turns the first row of any uploaded Excel (.xlsx) workbo
 
 ## Quick start
 
-1) Create and activate a virtual environment (recommended):
-```bash
-python -m venv .venv
-source .venv/bin/activate
-```
+1. Create and activate a virtual environment (recommended):
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate
+   ```
 
-2) Install dependencies:
-```bash
-pip install -r requirements.txt
-```
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-3) Export an app secret (optional but recommended for production):
-```bash
-export SECRET_KEY="a-long-random-string"
-```
+3. Run the app:
+   ```bash
+   flask --app app run
+   ```
 
-4) Start the Flask server (either approach works):
-```bash
-# Using the flask CLI
-flask --app app run
-
-# Or directly with Python
-python app.py
-```
-
-5) In your browser, open http://127.0.0.1:5000 and follow the flow:
-   - Upload an `.xlsx` file whose **first row contains your column headers**.
-   - Fill in the generated web form for those headers.
-   - Download the resulting Excel file; your entries are written to the first data row while preserving the template formatting.
+4. Open the app at http://127.0.0.1:5000. Upload an `.xlsx` file that contains your column headers in the first row, fill out the generated form, and download the filled workbook.
 
 ## How it works
 
@@ -47,11 +35,6 @@ Run unit tests with:
 
 ```bash
 pytest
-```
-
-If dependencies are missing in your environment, install them first:
-```bash
-pip install -r requirements.txt
 ```
 
 ## Configuration
