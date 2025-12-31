@@ -1,35 +1,52 @@
 from __future__ import annotations
 
 from io import BytesIO
-from typing import Iterable, List
+from typing import Iterable, List, Dict
 
 from openpyxl import load_workbook
 
 
-def extract_headers(stream: BytesIO) -> List[str]:
-    """Read the first row of the first sheet and return non-empty headers.
+def extract_fields(stream: BytesIO) -> List[Dict[str, object]]:
+    """Read editable bold cells and return field metadata.
 
     Raises:
-        ValueError: If no headers are found.
+        ValueError: If no editable fields are found.
     """
 
     workbook = load_workbook(stream, data_only=True)
     sheet = workbook.active
 
-    headers: List[str] = []
-    for cell in sheet[1]:  # first row
-        if cell.value is None or str(cell.value).strip() == "":
+    fields: List[Dict[str, object]] = []
+    for row in range(1, sheet.max_row + 1):
+        label_cell = sheet.cell(row=row, column=1)
+        value_cell = sheet.cell(row=row, column=5)
+        if label_cell.value is None:
             continue
-        headers.append(str(cell.value).strip())
+        label = str(label_cell.value).strip()
+        if not label:
+            continue
+        if not value_cell.font or not value_cell.font.bold:
+            continue
+        fields.append(
+            {
+                "key": f"r{row}c{value_cell.column}",
+                "label": label,
+                "row": row,
+                "column": value_cell.column,
+                "value": "" if value_cell.value is None else str(value_cell.value),
+            }
+        )
 
-    if not headers:
-        raise ValueError("No headers were found in the first row of the workbook.")
+    if not fields:
+        raise ValueError("No editable bold fields were found in the template.")
 
-    return headers
+    return fields
 
 
-def fill_template(template_bytes: bytes, row_data: Iterable[str]) -> bytes:
-    """Fill the first worksheet of a template workbook with one row of data.
+def fill_template(
+    template_bytes: bytes, fields: Iterable[Dict[str, object]], values: Iterable[str]
+) -> bytes:
+    """Fill the first worksheet of a template workbook with provided field values.
 
     The input workbook is not modified; a new workbook is returned as bytes.
     """
@@ -37,9 +54,10 @@ def fill_template(template_bytes: bytes, row_data: Iterable[str]) -> bytes:
     workbook = load_workbook(BytesIO(template_bytes))
     sheet = workbook.active
 
-    # Write data starting at the second row to preserve headers
-    for column_index, value in enumerate(row_data, start=1):
-        sheet.cell(row=2, column=column_index, value=value)
+    for field, value in zip(fields, values):
+        row = int(field["row"])
+        column = int(field["column"])
+        sheet.cell(row=row, column=column, value=value)
 
     output = BytesIO()
     workbook.save(output)

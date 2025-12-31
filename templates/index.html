@@ -1,19 +1,42 @@
 {% extends "base.html" %}
 {% block content %}
-  <section>
-    <h2>1. Upload your Excel template</h2>
-    <form action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data">
-      <label for="template">Choose an .xlsx file</label>
-      <input type="file" id="template" name="template" accept=".xlsx" required>
-      <button type="submit">Upload</button>
-    </form>
-  </section>
+  <section class="hero">
+    <div>
+      <h1>Turn your Excel template into an editable view.</h1>
+      <p>
+        Upload your file, update the bold fields in a clean spreadsheet layout, and download the
+        finished workbook instantly. <span class="hero-highlight">No formatting lost.</span>
+      </p>
+      <div class="steps">
+        <div class="step-card">
+          <h3>1. Upload</h3>
+          <p>Select your `.xlsx` file with bold fields.</p>
+        </div>
+        <div class="step-card">
+          <h3>2. Edit</h3>
+          <p>Update only the values that should change.</p>
+        </div>
+        <div class="step-card">
+          <h3>3. Download</h3>
+          <p>Get the same template with your edits applied.</p>
+        </div>
+      </div>
+    </div>
 
-  {% if has_template %}
-    <section>
-      <h2>2. Fill out the generated form</h2>
-      <p>Your template is ready. Continue to the form to enter data for the first row.</p>
-      <a role="button" href="{{ url_for('fill') }}">Go to form</a>
-    </section>
-  {% endif %}
+    <div class="card upload-card">
+      <h2>Upload your Excel template</h2>
+      <form action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data">
+        <label for="template">Choose an .xlsx file</label>
+        <input type="file" id="template" name="template" accept=".xlsx" required>
+        <button type="submit">Upload &amp; Build Form</button>
+      </form>
+
+      {% if has_template %}
+        <div>
+          <p>Your template is ready. Continue to edit the bold fields.</p>
+          <a role="button" class="secondary-button" href="{{ url_for('fill') }}">Go to editor</a>
+        </div>
+      {% endif %}
+    </div>
+  </section>
 {% endblock %}

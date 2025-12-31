@@ -1,6 +1,6 @@
 # format-creator
 
-A simple Flask app that turns the first row of any uploaded Excel (.xlsx) workbook into a web form. Upload your template, enter data into the generated form, and download a new Excel file with your responses written to the first data row.
+A simple Flask app that turns bold fields in an uploaded Excel (.xlsx) workbook into a web form. Upload your template, enter data into the generated form, and download a new Excel file with your responses written back into the same cells.
 
 ## Quick start
 
@@ -20,13 +20,13 @@ A simple Flask app that turns the first row of any uploaded Excel (.xlsx) workbo
    flask --app app run
    ```
 
-4. Open the app at http://127.0.0.1:5000. Upload an `.xlsx` file that contains your column headers in the first row, fill out the generated form, and download the filled workbook.
+4. Open the app at http://127.0.0.1:5000. Upload an `.xlsx` file, fill out the generated form for bold fields, and download the filled workbook.
 
 ## How it works
 
-- The first row of the first worksheet is treated as column headers. Empty header cells are ignored.
-- After uploading, the template is kept in the session so you can submit the form immediately.
-- Submitted values are written to the second row of the template, preserving your header row and any formatting in the rest of the sheet.
+- The app looks for bold cells in column E where column A contains the label.
+- After uploading, the template is stored on disk and referenced by the session so you can submit the form immediately.
+- Submitted values are written back into the same bold cells, preserving formatting and formulas elsewhere.
 - Downloads use the original filename prefixed with `filled_`.
 
 ## Testing

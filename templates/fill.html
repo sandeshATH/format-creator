@@ -1,16 +1,30 @@
 {% extends "base.html" %}
 {% block content %}
-  <section>
-    <h2>Fill out your data</h2>
-    <p>Enter values for each column header detected in the uploaded template. Your entries will be written to the first data row.</p>
+  <section class="panel">
+    <h2>Editable spreadsheet view</h2>
+    <p>Edit the bold fields below. Each row matches the original template line, and your updates will be written back into the same cells.</p>
     <form action="{{ url_for('fill') }}" method="post">
-      <div class="grid">
-        {% for header in headers %}
-          <label>
-            {{ header }}
-            <input type="text" name="{{ header }}" placeholder="Enter {{ header }}" required>
-          </label>
-        {% endfor %}
+      <div class="sheet">
+        <table>
+          <thead>
+            <tr>
+              <th class="row-index">Row</th>
+              <th>Field</th>
+              <th>Value (editable)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for field in fields %}
+              <tr>
+                <td class="row-index">{{ field.row }}</td>
+                <td class="label">{{ field.label }}</td>
+                <td>
+                  <input type="text" name="{{ field.key }}" placeholder="Enter {{ field.label }}" value="{{ field.value }}" required>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
       <button type="submit">Download filled Excel</button>
     </form>

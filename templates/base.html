@@ -4,20 +4,302 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Excel Form Creator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+    <style>
+      :root {
+        --ink: #0f172a;
+        --muted: #475569;
+        --accent: #1b7f5a;
+        --accent-dark: #0f5b3f;
+        --accent-soft: #e6f3ed;
+        --card: #ffffff;
+        --border: #d5dbe5;
+        --sheet-border: #c8ccd4;
+        --sheet-bg: #f6f7f9;
+        --sheet-cell: #ffffff;
+        --sheet-heading: #1c1f24;
+        --shadow: 0 20px 45px rgba(15, 23, 42, 0.12);
+        --radius-lg: 18px;
+        --radius-md: 12px;
+      }
+
+      body {
+        font-family: "Source Sans 3", "Helvetica Neue", Arial, sans-serif;
+        background:
+          radial-gradient(circle at 10% 10%, #ffffff 0%, #f3f6f4 35%, #eef1f5 100%),
+          radial-gradient(circle at 85% 5%, #eaf4ef 0%, transparent 55%);
+        color: var(--ink);
+      }
+
+      h1,
+      h2,
+      h3 {
+        font-family: "Space Grotesk", "Helvetica Neue", Arial, sans-serif;
+        color: var(--ink);
+        letter-spacing: -0.01em;
+      }
+
+      .page {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 2.75rem 1.75rem 4rem;
+      }
+
+      .site-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1.5rem;
+        margin-bottom: 2.5rem;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .brand-badge {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #1b7f5a, #0f5b3f);
+        display: grid;
+        place-items: center;
+        color: #ffffff;
+        font-weight: 700;
+        box-shadow: 0 12px 24px rgba(15, 91, 63, 0.35);
+      }
+
+      .brand p {
+        margin: 0;
+        color: var(--muted);
+      }
+
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow);
+      }
+
+      .panel {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow);
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 2rem;
+        align-items: center;
+        margin-bottom: 2.5rem;
+        animation: rise-in 0.6s ease both;
+      }
+
+      .hero h1 {
+        font-size: clamp(2rem, 4vw, 3rem);
+        margin-bottom: 0.75rem;
+      }
+
+      .hero p {
+        font-size: 1.1rem;
+        color: var(--muted);
+      }
+
+      .hero-highlight {
+        background: var(--accent-soft);
+        color: var(--accent-dark);
+        padding: 0.2rem 0.45rem;
+        border-radius: 8px;
+        font-weight: 600;
+      }
+
+      .upload-card {
+        padding: 1.75rem;
+        display: grid;
+        gap: 1rem;
+        animation: rise-in 0.75s ease both;
+      }
+
+      .upload-card label {
+        font-weight: 600;
+        color: var(--ink);
+      }
+
+      .upload-card input[type="file"] {
+        border: 1px dashed #a6b4c4;
+        background: #f8fafc;
+        padding: 0.9rem;
+        border-radius: 12px;
+      }
+
+      button,
+      [type="submit"],
+      a[role="button"] {
+        background: linear-gradient(135deg, var(--accent), #24a071);
+        border: none;
+        color: #ffffff;
+        font-weight: 600;
+        border-radius: 999px;
+        padding: 0.7rem 1.5rem;
+        box-shadow: 0 12px 26px rgba(27, 127, 90, 0.28);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      button:hover,
+      [type="submit"]:hover,
+      a[role="button"]:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 16px 30px rgba(27, 127, 90, 0.32);
+      }
+
+      .secondary-button {
+        background: #ffffff;
+        color: var(--accent-dark);
+        border: 1px solid var(--border);
+        box-shadow: none;
+      }
+
+      .steps {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1rem;
+      }
+
+      .step-card {
+        padding: 1.25rem;
+        border-radius: var(--radius-md);
+        background: #f7f9fb;
+        border: 1px solid var(--border);
+      }
+
+      .step-card h3 {
+        font-size: 1.1rem;
+        margin-bottom: 0.35rem;
+      }
+
+      .flash {
+        padding: 0.8rem 1rem;
+        background: #fff6db;
+        border: 1px solid #f2d49c;
+        border-radius: 12px;
+        margin-bottom: 1rem;
+        font-weight: 600;
+      }
+
+      .sheet {
+        border: 1px solid var(--sheet-border);
+        border-radius: 10px;
+        background: var(--sheet-bg);
+        padding: 1rem;
+        box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+      }
+
+      .sheet table {
+        margin: 0;
+        border-collapse: separate;
+        border-spacing: 0;
+        width: 100%;
+        background: var(--sheet-cell);
+        border-radius: 8px;
+        overflow: hidden;
+        color: #14161a;
+      }
+
+      .sheet th,
+      .sheet td {
+        border-bottom: 1px solid var(--sheet-border);
+        padding: 0.75rem 0.9rem;
+        vertical-align: middle;
+      }
+
+      .sheet th {
+        background: #eef1f6;
+        font-weight: 700;
+        color: var(--sheet-heading);
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        font-size: 0.75rem;
+      }
+
+      .sheet tr:last-child td {
+        border-bottom: none;
+      }
+
+      .sheet .row-index {
+        width: 4.5rem;
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+        color: #5b6472;
+      }
+
+      .sheet input[type="text"] {
+        margin: 0;
+        border-radius: 6px;
+        border: 1px solid #c9ced8;
+        background: #fffdf7;
+        padding: 0.55rem 0.75rem;
+        color: #14161a;
+      }
+
+      .sheet .label {
+        font-weight: 600;
+      }
+
+      @keyframes rise-in {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (max-width: 720px) {
+        .site-header {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        .sheet {
+          padding: 0.75rem;
+        }
+        .sheet th,
+        .sheet td {
+          padding: 0.6rem 0.7rem;
+        }
+        .sheet .row-index {
+          width: 3rem;
+        }
+      }
+    </style>
   </head>
   <body>
-    <main class="container">
-      <header>
-        <h1>Excel Form Creator</h1>
-        <p>Upload an Excel template, fill it out in the browser, and download the completed file.</p>
+    <main class="page">
+      <header class="site-header">
+        <div class="brand">
+          <div class="brand-badge">XF</div>
+          <div>
+            <h1>Excel Form Creator</h1>
+            <p>Upload a template, edit bold fields, download the updated Excel.</p>
+          </div>
+        </div>
       </header>
 
       {% with messages = get_flashed_messages() %}
         {% if messages %}
-          <div>
+          <div class="flash">
             {% for message in messages %}
-              <mark>{{ message }}</mark>
+              <span>{{ message }}</span>
             {% endfor %}
           </div>
         {% endif %}
